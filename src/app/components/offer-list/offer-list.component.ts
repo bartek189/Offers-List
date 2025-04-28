@@ -8,7 +8,7 @@ import {OfferService} from '../../services/offer.service';
 import {KinguinOffer, Seller} from '../../models/offer.model';
 import {OfferModalComponent} from '../offer-modal/offer-modal.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {NgxPermissionsModule, NgxPermissionsService} from "ngx-permissions";
+import {NgxPermissionsModule} from "ngx-permissions";
 
 @Component({
     selector: 'app-offer-list',
@@ -49,15 +49,12 @@ export class OfferListComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private modalService: NgbModal,
-        private permissionsService: NgxPermissionsService
     ) {
     }
 
     ngOnInit(): void {
-        this.permissionsService.loadPermissions(['EDIT_OFFER']);
 
         this.route.queryParams.subscribe(params => {
-            console.log('Query params changed:', params);
             if (params['id']) {
                 this.offerId = params['id'];
                 this.fetchOffers();

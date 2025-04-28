@@ -22,16 +22,16 @@ export class AppComponent {
     viewOnly = false;
 
     constructor(private permissionsService: NgxPermissionsService) {
-        this.permissionsService.loadPermissions(['EDIT']);
+        this.permissionsService.loadPermissions(['EDIT_OFFER']);
     }
 
     toggleViewOnly(value: boolean): void {
         this.viewOnly = value;
 
         if (value) {
-            this.permissionsService.removePermission('EDIT');
+            this.permissionsService.removePermission('EDIT_OFFER');
         } else {
-            this.permissionsService.addPermission('EDIT');
+            this.permissionsService.addPermission('EDIT_OFFER');
         }
     }
 }
