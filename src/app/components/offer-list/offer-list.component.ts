@@ -9,6 +9,7 @@ import {KinguinOffer, Seller} from '../../models/offer.model';
 import {OfferModalComponent} from '../offer-modal/offer-modal.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {NgxPermissionsModule} from "ngx-permissions";
+import {debounceTime, Subject, takeUntil} from "rxjs";
 
 @Component({
     selector: 'app-offer-list',
@@ -43,6 +44,9 @@ export class OfferListComponent implements OnInit {
     offers: KinguinOffer[] = [];
     isLoading = false;
     error: string | null = null;
+    private offerIdChanged$ = new Subject<string>();
+    private destroy$ = new Subject<void>();
+
 
     constructor(
         private offerService: OfferService,
@@ -53,17 +57,31 @@ export class OfferListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.route.queryParams
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(params => {
+                if (params['id']) {
+                    this.offerId = params['id'];
+                    this.fetchOffers();
+                }
+            });
 
-        this.route.queryParams.subscribe(params => {
-            if (params['id']) {
-                this.offerId = params['id'];
-                this.fetchOffers();
-            }
+        this.offerIdChanged$.pipe(
+            debounceTime(1000),
+            takeUntil(this.destroy$)
+        ).subscribe(id => {
+            this.offerId = id;
+            this.updateQueryParams();
         });
     }
 
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
     onIdChange(): void {
-        this.updateQueryParams();
+        this.offerIdChanged$.next(this.offerId);
     }
 
     updateQueryParams(): void {
