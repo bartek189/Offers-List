@@ -1,0 +1,62 @@
+<div class="mb-4">
+    <div class="input-group">
+        <input
+                type="text"
+                class="form-control"
+                placeholder="Enter offer ID"
+                name="id"
+                [(ngModel)]="offerId"
+                (ngModelChange)="onIdChange()">
+        <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" (click)="fetchOffers()">
+                <i class="fa fa-search"></i> Search
+            </button>
+        </div>
+    </div>
+    <small class="text-muted">Example ID: 6655a390bccd0c659cb6ffdd</small>
+</div>
+
+<div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<ngb-alert *ngIf="error" type="danger" [dismissible]="true">
+    {{ error }}
+</ngb-alert>
+
+<div *ngIf="offers && offers.length > 0" class="row">
+    <div *ngFor="let offer of offers" class="col-md-4 mb-4">
+
+        <div *ngxPermissionsOnly="['EDIT_OFFER']" class="card h-100" [class.clickable]="!viewOnly"
+             (click)="openOfferModal(offer)">
+            <img [src]="offer.productImageUrl" class="card-img-top" alt="{{ offer.productName }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ offer.productName }}</h5>
+                <p class="card-text">Seller: {{ offer.seller.name }}</p>
+                <p class="card-text">Price: {{ offer.price.amount / 100 | currency:offer.price.currency }}</p>
+                <p class="card-text">Stock: {{ offer.activeStockNumber }}</p>
+            </div>
+            <div *ngIf="!viewOnly" class="card-footer bg-transparent text-center">
+                <button class="btn btn-outline-primary btn-sm"
+                        (click)="openOfferModal(offer); $event.stopPropagation()">Edit
+                </button>
+            </div>
+        </div>
+
+        <div *ngxPermissionsExcept="['EDIT_OFFER']" class="card h-100">
+            <img [src]="offer.productImageUrl" class="card-img-top" alt="{{ offer.productName }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ offer.productName }}</h5>
+                <p class="card-text">Seller: {{ offer.seller.name }}</p>
+                <p class="card-text">Price: {{ offer.price.amount / 100 | currency:offer.price.currency }}</p>
+                <p class="card-text">Stock: {{ offer.activeStockNumber }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ngb-alert *ngIf="offers && offers.length === 0 && !isLoading" type="info" [dismissible]="false">
+    No offers found for the provided ID {{ offerId }}.
+</ngb-alert>

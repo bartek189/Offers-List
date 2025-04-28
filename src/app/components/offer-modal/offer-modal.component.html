@@ -1,0 +1,89 @@
+<div class="modal-content" [@modalAnimation]>
+    <div class="modal-header">
+        <h4 class="modal-title">Edit Offer</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="offerForm">
+            <div class="mb-3" [@formControlAnimation]="{params: getAnimationDelay(0)}">
+                <label for="productName" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="productName" formControlName="productName">
+                <div *ngIf="offerForm.get('productName')?.invalid && offerForm.get('productName')?.touched"
+                     class="text-danger">
+                    Product name is required
+                </div>
+            </div>
+
+            <div class="mb-3" [@formControlAnimation]="{params: getAnimationDelay(1)}">
+                <label for="popularityValue" class="form-label">Popularity Value</label>
+                <input type="number" class="form-control" id="popularityValue" formControlName="popularityValue">
+                <div *ngIf="offerForm.get('popularityValue')?.invalid && offerForm.get('popularityValue')?.touched"
+                     class="text-danger">
+                    Popularity value is required
+                </div>
+            </div>
+
+            <div class="mb-3 form-check" [@formControlAnimation]="{params: getAnimationDelay(2)}">
+                <input type="checkbox" class="form-check-input" id="isPreorder" formControlName="isPreorder">
+                <label class="form-check-label" for="isPreorder">Is Preorder</label>
+            </div>
+
+            <div class="mb-3" [@formControlAnimation]="{params: getAnimationDelay(3)}">
+                <label for="type" class="form-label">Type</label>
+                <select class="form-select" id="type" formControlName="type">
+                    <option value="kinguin">Kinguin</option>
+                    <option value="other">Other</option>
+                </select>
+                <div *ngIf="offerForm.get('type')?.invalid" class="text-danger">
+                    Type is required
+                </div>
+            </div>
+
+            <div class="mb-3" [@formControlAnimation]="{params: getAnimationDelay(4)}">
+                <label for="price" class="form-label">Price</label>
+                <input type="text" class="form-control" id="price" formControlName="price">
+                <div *ngIf="offerForm.get('price')?.invalid" class="text-danger">
+                    Price is required
+                </div>
+            </div>
+
+            <div class="mb-3" [@formControlAnimation]="{params: getAnimationDelay(5)}">
+                <label for="currency" class="form-label">Currency</label>
+                <select class="form-select" id="currency" formControlName="currency">
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                    <option value="PLN">PLN</option>
+                </select>
+            </div>
+
+            <div class="mb-3" [@formControlAnimation]="{params: getAnimationDelay(6)}">
+                <label for="seller" class="form-label">Seller</label>
+                <select *ngIf="offerForm.get('type')?.value !== 'other'" class="form-select" id="seller"
+                        formControlName="seller">
+                    <option *ngFor="let seller of allSellers" [value]="seller.id">{{ seller.name }}</option>
+                </select>
+                <input *ngIf="offerForm.get('type')?.value === 'other'" type="text" class="form-control"
+                       id="sellerInput" formControlName="seller">
+                <div *ngIf="offerForm.get('seller')?.invalid" class="text-danger">
+                    Seller is required
+                </div>
+            </div>
+
+            <div class="mb-3" [@formControlAnimation]="{params: getAnimationDelay(7)}">
+                <label for="activeStockNumber" class="form-label">Active Stock Number</label>
+                <input type="number" class="form-control" id="activeStockNumber" formControlName="activeStockNumber">
+                <div *ngIf="offerForm.get('activeStockNumber')?.invalid"
+                     class="text-danger">
+                    Active stock number is required
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="offerForm.invalid">Save
+            changes
+        </button>
+    </div>
+</div>
