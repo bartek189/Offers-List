@@ -64,9 +64,6 @@ export class OfferListComponent implements OnInit {
 
     onIdChange(): void {
         this.updateQueryParams();
-        if (this.offerId) {
-            this.fetchOffers();
-        }
     }
 
     updateQueryParams(): void {
